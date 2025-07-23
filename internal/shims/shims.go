@@ -315,6 +315,11 @@ func Write(conf config.Config, plugin plugins.Plugin, version toolversions.Versi
 	}
 
 	shimName := filepath.Base(executablePath)
+
+	if shimName == "asdf" {
+		return fmt.Errorf("plugin %s tried to write shim for asdf, preventing as this causes recursive looping", plugin.Name)
+	}
+
 	shimPath := Path(conf, shimName)
 	versions := []toolversions.ToolVersions{{Name: plugin.Name, Versions: []string{toolversions.Format(version)}}}
 
